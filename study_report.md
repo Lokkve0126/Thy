@@ -3,3 +3,4 @@
 ```
 <link rel="shortcut icon" href="img/ico/favicon.ico" type="image/x-icon">
 ```
+#javascript
