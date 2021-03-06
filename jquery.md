@@ -134,9 +134,88 @@ $div.eq(0).toggleClass("abc");//如果存在class就添加（不存在）就删�
 //$div.css("width");//获取宽度
 //多个属性设置的情况下可采用
 //$div.css({
-    width:100px;
-    background: red;
+    width:"100px";
+    background: "red";
 });
 
 //$div.width();获取div的宽度 不包括边框
+//$div.width("200px");设置div的宽度
+
+//$div.eq(1).position();获取选中div的postion值top left
+//$div.eq(1).position().left;获取left偏移量
+//$div.eq(1).position().top;获取top偏移量
+
+//$div.eq(1).offset().left;获取匹配元素在当前视口的相对偏移
+//$div.eq(1).offset().top;
+
+//$div.eq(1).html("<span>abc</span>");//插入html元素
+//$div.eq(1).text("<span>abc</span>");//插入文本内容不能改变元素结构
+//$input.eq(1).val("abc");//可以改变input输入框的值
+
+```
+##### 事件绑定以及事件[冒泡]委托
+>在jquery中如果核心函数找到的元素不止一个，那么在添加事件时会遍历所有找到的元素，并绑定事件
+```
+*****事件绑定*****
+
+//常用的事件绑定方法$div.eq(0).click(function() {
+    alert("father");
+});
+$div.eq(1).click(function(e) {
+    alert("son");
+    //e.stopPropagation();
+    //return false;
+});
+//当我们点击父元素时会弹出father,但点击子元素时会先弹出son，再弹出father这就是事件冒泡
+//阻止事件冒泡的方法在回调函数中调用e.stopPropagation();  或者return false;来阻止事件冒泡
+
+//上面绑定的方法只适用于已经写好事件的调用，下面可以自定义事件
+$div.eq(1).on("click",function() {
+    alert("son");
+});
+//on();第一个参数为事件 可空格隔开书写多个事件 也可以事件.命名空间来指定触发 例如:click.abc，第二参数可选一个选择器字符串用于过滤器的触发事件的选择器元素的后代 如果选择的< null或省略 当它到达选定的元素，事件总是触发 第三个参数可填false或者回调函数fn
+
+*****事件移除*****
+//$(ele).off();
+//不传参数移除所有的事件
+//一个参数移除指定类型的事件
+//两个参数会移除所有指定类型的指定事件
+//匿名函数无法移除
+
+*****事件委托*****
+
+//$("ul").eq(0).on("click","li,span",function() {
+        alert($(this).text());
+    });
+    //给ul绑定click事件 并触发给子元素li和span
+
+//$(ele).delegate();       jQuery 3.0中已弃用此方法，请用 on()代替。
+//$("ul").delegate("li,span","click",function() {
+        alert($(this).text());
+    });
+    //第一个参数为选择器字符串，用于过滤器触发事件的元素。
+    //第二个参数为附加到元素的一个或多个事件。 由空格分隔多个事件值。必须是有效的事件。
+    //第三个参数为回调函数
+
+*****阻止默认事件*****
+
+//a元素行为 填入了链接地址弹出窗口后会跳转
+//$("a").click(function(e) {
+        alert($(this).attr("href"));
+        //return false;
+        //e.preventDefault();
+    });
+    //第一种方法return false;
+    //第二种方法e.preventDefault();
+    //第三种ie ev.returnValue = false;
+
+*****自动触发事件*****
+//$(ele).trigger(事件,参数，参数...)
+//trigger会自动触发事件并触发事件冒泡
+//在触发自动触发a元素的点击事件时 要在a元素里的文字外套上元素span
+再监听span的点击事件就可以触发并跳转 否则无效
+
+//$(ele).triggerHandler(事件,参数，参数...)
+//triggerHandler会自动触发事件但不会触发事件冒泡,不会执行浏览器默认动作,只触发jQuery对象集合中第一个元素的事件处理函数。
+//传入的参数可以在回调函数中使用
 ```
